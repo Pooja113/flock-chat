@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script defer src="script.js"></script>
+    <style>
+      .container {
+        background-color: #eee;
+        /* height: 98vh; */
+      }
+      .header {
+        background-color: #fff;
+        padding: 10px;
+        display: flex;
+      }
+      h1 {
+        margin: 0 auto;
+      }
+      #msg-output {
+        height: 85vh;
+      }
+      #msg-output div {
+        padding: 13px;
+        background-color: #ccc;
+      }
+      #msg-input {
+        width: 92vw;
+        padding: 20px 10px;
+        border-radius: 5px 0 0 5px;
+        border: 1px solid #eee;
+      }
+      .submit-btn {
+        padding: 18px;
+        border-radius: 0 5px 5px 0;
+        border: 1px solid #8b8484;
+        background: #4f4e4e;
+        color: #fff;
+        font-size: 16px;
+      }
+      #message-form {
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header"><h1>Flock App</h1></div>
+      <div id="msg-output"></div>
+      <form id="message-form">
+        <input type="text" id="msg-input" />
+        <button class="submit-btn" type="submit">Submit</button>
+      </form>
+    </div>
+  </body>
+</html>
