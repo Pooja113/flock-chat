@@ -4,8 +4,9 @@ const {
   fetchChats,
   accessChats,
 } = require("../controllers/chatControllers.js");
+const auth = require("../middlewares/authMiddleware.js");
 
-router.post("/", fetchChats);
-router.get("/", accessChats);
+router.route("/").get(auth, fetchChats);
+router.route("/").post(auth, accessChats);
 
 module.exports = router;

@@ -3,6 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Pages/Home";
 import Chat from "./Pages/Chat";
+import ChatProvider from "./Context/ChatProvider";
 
 const router = createBrowserRouter([
   {
@@ -17,11 +18,13 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <ChakraProvider>
-      <div className="app">
-        <RouterProvider router={router} />
-      </div>
-    </ChakraProvider>
+    <ChatProvider>
+      <ChakraProvider>
+        <div className="app">
+          <RouterProvider router={router} />
+        </div>
+      </ChakraProvider>
+    </ChatProvider>
   );
 }
 

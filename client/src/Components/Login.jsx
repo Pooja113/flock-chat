@@ -50,7 +50,6 @@ const Login = () => {
         { email, password },
         config
       );
-      console.log(data);
 
       toast({
         title: "Logged In",
