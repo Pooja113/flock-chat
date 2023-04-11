@@ -12,19 +12,23 @@ const router = createBrowserRouter([
   },
   {
     path: "/chats",
-    element: <Chat />,
+    element: (
+      <>
+        <ChatProvider>
+          <Chat />
+        </ChatProvider>
+      </>
+    ),
   },
 ]);
 
 function App() {
   return (
-    <ChatProvider>
-      <ChakraProvider>
-        <div className="app">
-          <RouterProvider router={router} />
-        </div>
-      </ChakraProvider>
-    </ChatProvider>
+    <ChakraProvider>
+      <div className="app">
+        <RouterProvider router={router} />
+      </div>
+    </ChakraProvider>
   );
 }
 

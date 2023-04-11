@@ -48,6 +48,7 @@ const login = async (req, res) => {
       { expiresIn: "1h" }
     );
     res.status(200).json({
+      id: userExist._id,
       name: userExist.name,
       email: userExist.email,
       pic: userExist.image,
@@ -58,4 +59,13 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { register, login };
+const fetchAllUsers = async (req, res) => {
+  try {
+    const users = await UserModel.find({ _id: { $ne: req.user.id } });
+    res.status(200).send(users);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = { register, login, fetchAllUsers };

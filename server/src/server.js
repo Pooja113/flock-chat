@@ -23,27 +23,52 @@ const server = app.listen(
 );
 
 const io = require("socket.io")(server, {
+  pingTimeout: 60000,
   cors: {
-    origin: "http://127.0.0.1:5500",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
 
-const users = {};
+const userSocketMap = {};
+const socketUserMap = {};
 
 io.on("connection", (socket) => {
-  socket.on("new-user", (user) => {
-    users[socket.id] = user;
-    socket.broadcast.emit("user-connected", user);
+  console.log(`connected socketid: ${socket.id}`);
+  socket.on("create-map", ({ userId }) => {
+    console.log("userId", userId);
+    console.log("socket.id", socket.id);
+    userSocketMap[userId] = socket.id;
+    socketUserMap[socket.id] = userId;
+    console.log(`userSocketMap: ${JSON.stringify(userSocketMap)}`);
+    console.log(`socketUserMap: ${JSON.stringify(socketUserMap)}`);
   });
-  socket.on("chat-message", (message) => {
-    socket.broadcast.emit("message", {
-      message,
-      name: users[socket.id],
-    });
+  //console.log(socket.id);
+  //  userSocketMap[userId] = socket.id;
+  // // socket.on("new-user", (user) => {
+  // //   users[socket.id] = user;
+  // //   socket.broadcast.emit("user-connected", user);
+  // // });
+  // socket.on("message", (message) => {
+  //   var chat = message.chat;
+  //   chat.users.forEach((user) => {
+  //     if (user._id == newMessageRecieved.sender._id) return;
+
+  //     socket.in(user._id).emit("message recieved", newMessageRecieved);
+  //   });
+  //   console.log(chat)
+  // });
+  socket.on("msg", ({ message, to }) => {
+    console.log(message);
+    socket.emit("msg", message);
+    // socket
+    //   .to(userSocketMap[to])
+    //   .emit("msg", { message, from: socketUserMap[socket.id] });
   });
-  socket.on("disconnect", () => {
-    socket.broadcast.emit("user-disconnected", users[socket.id]);
-    delete users[socket.id];
-  });
+  // socket.on("disconnect", () => {
+  //   console.log("Disconnect");
+  //   // socket.broadcast.emit("user-disconnected", users[socket.id]);
+  //   //delete userSocketMap[userId];
+  //   // delete users[socket.id];
+  // });
 });

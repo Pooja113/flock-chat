@@ -1,8 +1,14 @@
-import { Box, Menu, MenuButton, Text, Button } from "@chakra-ui/react";
+import { Box, Text, Button, Avatar } from "@chakra-ui/react";
 import React from "react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
+  const logoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    navigate("/");
+  };
   return (
     <Box
       display="flex"
@@ -22,12 +28,16 @@ const Header = () => {
       >
         Flock App
       </Text>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Menu>
-          <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-            name
-          </MenuButton>
-        </Menu>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flex: "0.1",
+          justifyContent: "space-around",
+        }}
+      >
+        <Avatar />
+        <Button onClick={logoutHandler}>Logout</Button>
       </div>
     </Box>
   );
