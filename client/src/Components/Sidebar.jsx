@@ -7,7 +7,7 @@ import { ChatState } from "../Context/ChatProvider";
 
 const Sidebar = ({ handleClick }) => {
   const [users, setUsers] = useState();
-  const [chats, setChats] = useState();
+  const [active, setActive] = useState(false);
 
   const { user } = ChatState();
   const fetchAllusers = async () => {
@@ -24,25 +24,6 @@ const Sidebar = ({ handleClick }) => {
     fetchAllusers();
   }, []);
 
-  const fetchChats = async (id) => {
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-      };
-
-      console.log(user?.token);
-      const { data } = await axios.get(
-        `http://localhost:3000/chats/${id}`,
-        config
-      );
-      setChats(data);
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
   return (
     <div
       style={{
@@ -60,6 +41,10 @@ const Sidebar = ({ handleClick }) => {
           _hover={{
             background: "aquamarine",
           }}
+          _active={{
+            background: "aquamarine",
+          }}
+          background={active ? "aquamarine" : "#fff"}
           p={2}
           m="5px"
           borderWidth="1px"
@@ -67,7 +52,10 @@ const Sidebar = ({ handleClick }) => {
           color="black"
           key={user?._id}
           display="flex"
-          onClick={() => handleClick(user?._id)}
+          onClick={() => {
+            handleClick(user?._id);
+            setActive(true);
+          }}
         >
           <Avatar
             mr={2}

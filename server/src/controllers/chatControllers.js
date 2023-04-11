@@ -23,6 +23,7 @@ const createChats = async (req) => {
       recieverId: to,
       message,
     });
+    await chat.save();
   } catch (error) {
     console.log(error);
   }

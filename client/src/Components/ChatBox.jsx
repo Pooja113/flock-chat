@@ -25,7 +25,6 @@ const ChatBox = ({ userId }) => {
         `http://localhost:3000/chats/${userId}`,
         config
       );
-      console.log(data);
       setChats(data);
     } catch (error) {
       console.log(error.message);
@@ -34,24 +33,15 @@ const ChatBox = ({ userId }) => {
 
   const handleSubmit = async (userId) => {
     try {
-      // const config = {
-      //   headers: {
-      //     "Content-type": "application/json",
-      //     Authorization: `Bearer ${user?.token}`,
-      //   },
-      // };
-
-      // const { data } = await axios.post(
-      //   `http://localhost:3000/chats`,
-      //   { userId, message },
-      //   config
-      // );
       socket.emit("msg", { message, to: userId, from: user.id });
       setMessage(" ");
       const newchats = {
         message,
+        senderId: user.id,
+        createdAt: new Date(),
       };
       setChats([...chats, newchats]);
+      console.log(chats);
     } catch (error) {
       console.log(error.message);
     }
@@ -76,7 +66,6 @@ const ChatBox = ({ userId }) => {
   }, [userId]);
   return (
     <Box
-      display="flex"
       flexDirection="column"
       justifyContent="flex-start"
       p={4}
@@ -85,22 +74,49 @@ const ChatBox = ({ userId }) => {
       m="20px 0 15px 0"
       borderRadius="lg"
       borderWidth="1px"
-      alignItems="flex-start"
     >
       {chats &&
         chats.map((chat) => {
+          const time = chat.createdAt;
+          const timestamp = Date.parse(time);
+          const newtime = new Date(timestamp);
+          const hours = newtime.getHours() % 12 || 12;
+          const minutes = newtime.getMinutes();
+
           return (
             <div
-              key={chat?._id}
               style={{
                 display: "flex",
-                background: "#e7f0f7",
-                margin: "5px",
-                padding: "10px",
-                borderRadius: "10px",
+                justifyContent: `${
+                  chat?.senderId === user.id ? "flex-start" : "flex-end"
+                }`,
               }}
             >
-              {chat?.message}
+              <div
+                key={chat?._id}
+                style={{
+                  display: "flex",
+                  background: `${
+                    chat?.senderId === user.id ? "#e0edf8" : "#def5e5"
+                  }`,
+                  margin: "5px",
+                  padding: "10px",
+                  borderRadius: "10px",
+                }}
+              >
+                {chat?.message}
+                <span
+                  style={{
+                    display: "flex",
+                    color: "rgb(132 128 128)",
+                    fontSize: "12px",
+                    alignItems: "end",
+                    paddingLeft: "10px",
+                  }}
+                >
+                  {hours}:{minutes}
+                </span>
+              </div>
             </div>
           );
         })}

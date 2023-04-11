@@ -10,6 +10,7 @@ const Chat = () => {
   const { user } = ChatState();
   const [userId, setUserId] = useState();
   const handleClick = async (id) => {
+    
     setUserId(id);
   };
 
