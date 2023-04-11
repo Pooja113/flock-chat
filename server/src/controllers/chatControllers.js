@@ -4,7 +4,10 @@ const fetchChats = async (req, res) => {
   try {
     const { id } = req.params;
     const results = await Chat.find({
-      $and: [{ senderId: req.user._id }, { recieverId: id }],
+      $and: [
+        { $or: [{ senderId: req.user._id }, { senderId: id }] },
+        { $or: [{ recieverId: req.user._id }, { recieverId: id }] },
+      ],
     });
     res.status(200).send(results);
   } catch (error) {
@@ -12,21 +15,16 @@ const fetchChats = async (req, res) => {
   }
 };
 
-const createChats = async (req, res) => {
+const createChats = async (req) => {
   try {
-    const { userId, message } = req.body;
-    if (!userId) {
-      res.status(400).json({ message: "UserId has not been sent" });
-    }
+    const { to, message, from } = req;
     const chat = await Chat.create({
-      senderId: req.user._id,
-      recieverId: userId,
+      senderId: from,
+      recieverId: to,
       message,
     });
-
-    res.status(201).json(chat);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.log(error);
   }
 };
 
