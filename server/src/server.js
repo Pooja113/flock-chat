@@ -5,6 +5,8 @@ const register = require("./routes/userRoutes.js");
 const chats = require("./routes/chatRoutes.js");
 
 const cors = require("cors");
+const Chat = require("./models/chatModel");
+const { createChats } = require("./controllers/chatControllers");
 
 dotenv.config();
 const app = express();
@@ -36,8 +38,6 @@ const socketUserMap = {};
 io.on("connection", (socket) => {
   console.log(`connected socketid: ${socket.id}`);
   socket.on("create-map", ({ userId }) => {
-    console.log("userId", userId);
-    console.log("socket.id", socket.id);
     userSocketMap[userId] = socket.id;
     socketUserMap[socket.id] = userId;
     console.log(`userSocketMap: ${JSON.stringify(userSocketMap)}`);
@@ -49,21 +49,27 @@ io.on("connection", (socket) => {
   // //   users[socket.id] = user;
   // //   socket.broadcast.emit("user-connected", user);
   // // });
-  // socket.on("message", (message) => {
-  //   var chat = message.chat;
-  //   chat.users.forEach((user) => {
-  //     if (user._id == newMessageRecieved.sender._id) return;
 
-  //     socket.in(user._id).emit("message recieved", newMessageRecieved);
-  //   });
-  //   console.log(chat)
-  // });
-  socket.on("msg", ({ message, to }) => {
+  socket.on("msg", async ({ message, to,from }) => {
     console.log(message);
-    socket.emit("msg", message);
-    // socket
-    //   .to(userSocketMap[to])
-    //   .emit("msg", { message, from: socketUserMap[socket.id] });
+    createChats({ to, message, from });
+    // try {
+    //   const { userId, message } = req.body;
+    //   if (!userId) {
+    //     res.status(400).json({ message: "UserId has not been sent" });
+    //   }
+    //   const chat = await Chat.create({
+    //     senderId: req.user._id,
+    //     recieverId: userId,
+    //     message,
+    //   });
+
+    //   res.status(201).json(chat);
+    // } catch (error) {
+    //   res.status(400).json({ message: error.message });
+    // }
+
+    socket.to(userSocketMap[to]).emit("msg", message);
   });
   // socket.on("disconnect", () => {
   //   console.log("Disconnect");

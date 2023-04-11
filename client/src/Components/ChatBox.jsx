@@ -25,6 +25,7 @@ const ChatBox = ({ userId }) => {
         `http://localhost:3000/chats/${userId}`,
         config
       );
+      console.log(data);
       setChats(data);
     } catch (error) {
       console.log(error.message);
@@ -45,10 +46,12 @@ const ChatBox = ({ userId }) => {
       //   { userId, message },
       //   config
       // );
-      const textMessage = message;
-      const recieverId = userId;
-      socket.emit("msg", { message: textMessage, to: recieverId });
+      socket.emit("msg", { message, to: userId, from: user.id });
       setMessage(" ");
+      const newchats = {
+        message,
+      };
+      setChats([...chats, newchats]);
     } catch (error) {
       console.log(error.message);
     }
@@ -56,20 +59,21 @@ const ChatBox = ({ userId }) => {
 
   useEffect(() => {
     socket = io(ENDPOINT);
-    socket.emit("create-map", { userId });
-  }, [userId]);
+    socket.emit("create-map", { userId: user.id });
+  }, []);
 
   useEffect(() => {
     socket.on("msg", (message) => {
       console.log(`received msg: ${message}`);
-      setChats([...chats, { message }]);
+      const newchats = {
+        message,
+      };
+      setChats([...chats, newchats]);
     });
-  }, [chats]);
-  console.log(chats);
+  });
   useEffect(() => {
     fetchAllchats(userId);
   }, [userId]);
-  console.log(chats);
   return (
     <Box
       display="flex"
