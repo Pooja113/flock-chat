@@ -7,7 +7,7 @@ import { ChatState } from "../Context/ChatProvider";
 
 const Sidebar = ({ handleClick }) => {
   const [users, setUsers] = useState();
-  const [active, setActive] = useState(false);
+  const [userIndex, setUserIndex] = useState(null);
 
   const { user } = ChatState();
   const fetchAllusers = async () => {
@@ -35,16 +35,13 @@ const Sidebar = ({ handleClick }) => {
         height: "87vh",
       }}
     >
-      {users?.map((user) => (
+      {users?.map((user, i) => (
         <Box
           cursor="pointer"
           _hover={{
             background: "aquamarine",
           }}
-          _active={{
-            background: "aquamarine",
-          }}
-          background={active ? "aquamarine" : "#fff"}
+          background={userIndex == user?._id ? "aquamarine" : "#fff"}
           p={2}
           m="5px"
           borderWidth="1px"
@@ -54,7 +51,7 @@ const Sidebar = ({ handleClick }) => {
           display="flex"
           onClick={() => {
             handleClick(user?._id);
-            setActive(true);
+            setUserIndex(user?._id);
           }}
         >
           <Avatar

@@ -85,6 +85,7 @@ const ChatBox = ({ userId }) => {
 
           return (
             <div
+              key={chat?._id}
               style={{
                 display: "flex",
                 justifyContent: `${
@@ -93,7 +94,6 @@ const ChatBox = ({ userId }) => {
               }}
             >
               <div
-                key={chat?._id}
                 style={{
                   display: "flex",
                   background: `${
@@ -121,7 +121,6 @@ const ChatBox = ({ userId }) => {
           );
         })}
       <FormControl
-        id="first-name"
         isRequired
         mt={3}
         style={{ display: "flex" }}
